@@ -103,6 +103,63 @@ public class UserServiceImpl implements UserService{
         return "User with userid "+userId+" is not present";
     }
 
+    public String update(UserRequest userRequest,int user_id){
+
+        if(userRequest.getRole().getRoleId()==2 && userRequest.getStudent() == null) {
+            return "Please enter student details";
+        }
+
+        if(userRequest.getRole().getRoleId()==1 && userRequest.getMentor() == null) {
+            return "Please enter mentor details";
+        }
+
+        User user1 = userDao.save(User.builder()
+                     .userId(user_id)
+                     .password(userRequest.getPassword())
+                     .registrationNumber(userRequest.getRegistrationNumber())
+                     .username(userRequest.getUsername())
+                     .role(Role.builder()
+                                  .roleId(userRequest.getRole().getRoleId())
+                                  .roleName(userRequest.getRole().getRoleName())
+                                  .build())
+                    .build());
+
+
+        if(userRequest.getStudent()!=null) {
+            if (userRequest.getRole().getRoleId() == 2 && userRequest.getStudent().getId() != 0) {
+                studentDao.save(Student.builder()
+                        .id(userRequest.getStudent().getId())
+                        .email(userRequest.getStudent().getEmail())
+                        .dateOfBirth(userRequest.getStudent().getDateOfBirth())
+                        .lastName(userRequest.getStudent().getLastName())
+                        .firstName(userRequest.getStudent().getFirstName())
+                        .mobileNo(userRequest.getStudent().getMobileNo())
+                        .registrationNumber(userRequest.getStudent().getRegistrationNumber())
+                        .user(user1)
+                        .build());
+            }
+            else if(userRequest.getRole().getRoleId()==2 && userRequest.getStudent().getId()==0)
+                return "Please enter student id";
+        }
+        if(userRequest.getMentor()!=null) {
+            if (userRequest.getRole().getRoleId() == 1 && userRequest.getMentor().getId() != 0) {
+                mentorDao.save(Mentor.builder()
+                        .id(userRequest.getMentor().getId())
+                        .dateOfBirth(userRequest.getMentor().getDateOfBirth())
+                        .email(userRequest.getMentor().getEmail())
+                        .firstName(userRequest.getMentor().getFirstName())
+                        .lastName(userRequest.getMentor().getLastName())
+                        .mobileNo(userRequest.getMentor().getMobileNo())
+                        .registrationNumber(userRequest.getMentor().getRegistrationNumber())
+                        .user(user1)
+                        .build());
+            }
+            else if(userRequest.getRole().getRoleId()==1 && userRequest.getMentor().getId()==0)
+                 return "Please enter mentor id";
+        }
+        return "Data Updated Successfully";
+    }
+
     @Override
     @Transactional
     public User saveStudent(Student student,int uid){

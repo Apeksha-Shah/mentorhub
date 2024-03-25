@@ -40,7 +40,7 @@ public class Student {
     private String email;
 
     @JsonIgnoreProperties("students")
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(name = "studentMentor",
             joinColumns = @JoinColumn(name = "s_id",referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "m_id",referencedColumnName = "id"))

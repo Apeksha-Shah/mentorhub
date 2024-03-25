@@ -12,4 +12,5 @@ public interface UserService {
     public List<User> findAll();
     public String deleteById(int userId);
     public User saveStudent(Student student,int uid);
+    public String update(UserRequest user,int user_id);
 }

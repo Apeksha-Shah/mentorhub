@@ -45,10 +45,9 @@ public class UserController {
         return userService.findById(user_id);
     }
 
-    @PutMapping("/users")
-    public UserRequest update(@RequestBody UserRequest user){
-         userService.save(user);
-         return user;
+    @PutMapping("/users/{user_id}")
+    public String update(@PathVariable int user_id,@RequestBody UserRequest user){
+        return userService.update(user,user_id);
     }
 
     @DeleteMapping("/users/{user_id}")
